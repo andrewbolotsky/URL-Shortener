@@ -8,5 +8,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class ShortenUrlResponse {
-    private String shortenUrl;
+    private String shortenedUrl;
 }
