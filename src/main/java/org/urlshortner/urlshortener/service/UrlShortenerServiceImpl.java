@@ -22,6 +22,8 @@ public class UrlShortenerServiceImpl implements UrlShortenerService {
     @Autowired
     UrlShortenerImpl urlShortener;
 
+    private static final int countOfAttemptsToGenerateUniqueKey = 20;
+
     private String getShortenedUrl(String shortenedUrlKey) {
         final String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
         return baseUrl + "/" + shortenedUrlKey;
@@ -46,17 +48,22 @@ public class UrlShortenerServiceImpl implements UrlShortenerService {
 
     @Transactional
     @Override
-    public ShortenUrlResponse postShortenedUrl(URL url) {
+    public Optional<ShortenUrlResponse> postShortenedUrl(URL url) {
         Optional<ShortenUrlResponse> foundedUrl = getShortenedUrl(url);
         if (foundedUrl.isPresent()) {
-            return foundedUrl.get();
+            return foundedUrl;
         }
         String newKey = urlShortener.generateUniqueKey(url.toString());
-        while (repository.findRedirectionByShortenedUrlKey(newKey).isPresent()) {
+        int count = 0;
+        while (repository.findRedirectionByShortenedUrlKey(newKey).isPresent() ) {
             newKey = urlShortener.generateUniqueKey(url.toString());
+            count++;
+            if (count >= countOfAttemptsToGenerateUniqueKey){
+                return Optional.empty();
+            }
         }
         Redirection redirection = repository.save(new Redirection(url, newKey));
-        return new ShortenUrlResponse(getShortenedUrl(redirection.getShortenedUrlKey()));
+        return Optional.of(new ShortenUrlResponse(getShortenedUrl(redirection.getShortenedUrlKey())));
     }
 
     @Override
