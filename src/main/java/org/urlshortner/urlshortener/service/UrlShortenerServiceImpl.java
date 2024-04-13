@@ -61,7 +61,7 @@ public class UrlShortenerServiceImpl implements UrlShortenerService {
     }
 
 
-    private String uniqueKeyForUrl(String url) {
+    private String uniqueKeyForUrl(String ignored) {
         return UUID.randomUUID().toString();
     }
 }
