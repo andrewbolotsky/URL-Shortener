@@ -28,7 +28,7 @@ public class UrlShortenerServiceImpl implements UrlShortenerService {
     @Override
     public Optional<URL> validUrl(String url) {
         try {
-            URL checkedUrl = URI.create("https://www.example.com").toURL();
+            URL checkedUrl = URI.create(url).toURL();
             checkedUrl.toURI();
             return Optional.of(checkedUrl);
         } catch (MalformedURLException | URISyntaxException e) {
