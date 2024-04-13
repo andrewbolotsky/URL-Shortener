@@ -9,7 +9,7 @@ import java.net.URL;
 @Entity
 @Data
 @NoArgsConstructor
-@Table(name = "redirections",schema = "public",catalog = "urlshortener")
+@Table(name = "redirections", schema = "public", catalog = "urlshortener")
 public class Redirection {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +21,7 @@ public class Redirection {
     @Column(name = "shortened_url")
     private String shortenedUrlKey;
 
-    public Redirection(URL url, String shortenedUrlToken){
+    public Redirection(URL url, String shortenedUrlToken) {
         this.url = url;
         this.shortenedUrlKey = shortenedUrlToken;
     }
