@@ -17,12 +17,11 @@ import java.util.Optional;
 
 @Service
 public class UrlShortenerServiceImpl implements UrlShortenerService {
+    private static final int countOfAttemptsToGenerateUniqueKey = 20;
     @Autowired
     RedirectionRepository repository;
     @Autowired
     UrlShortenerImpl urlShortener;
-
-    private static final int countOfAttemptsToGenerateUniqueKey = 20;
 
     private String getShortenedUrl(String shortenedUrlKey) {
         final String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
@@ -55,10 +54,10 @@ public class UrlShortenerServiceImpl implements UrlShortenerService {
         }
         String newKey = urlShortener.generateUniqueKey(url.toString());
         int count = 0;
-        while (repository.findRedirectionByShortenedUrlKey(newKey).isPresent() ) {
+        while (repository.findRedirectionByShortenedUrlKey(newKey).isPresent()) {
             newKey = urlShortener.generateUniqueKey(url.toString());
             count++;
-            if (count >= countOfAttemptsToGenerateUniqueKey){
+            if (count >= countOfAttemptsToGenerateUniqueKey) {
                 return Optional.empty();
             }
         }

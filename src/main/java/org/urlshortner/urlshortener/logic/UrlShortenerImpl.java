@@ -15,9 +15,8 @@ public class UrlShortenerImpl implements UrlShortener {
     private final static int shortenedUrlKeyLength = 7;
 
     private final static String allowedSymbolsInUniqueKey = "0123456789qwertyuiopasdfghjklzxcvbnm";
-    private MessageDigest messageDigest;
-
     Logger logger = LoggerFactory.getLogger(UrlShortenerImpl.class);
+    private MessageDigest messageDigest;
 
     UrlShortenerImpl() {
         try {
@@ -42,7 +41,6 @@ public class UrlShortenerImpl implements UrlShortener {
             resultBuilder.append(hashedString.charAt(random.nextInt(hashedString.length())));
         }
         return resultBuilder.toString();
-
     }
 
 }
