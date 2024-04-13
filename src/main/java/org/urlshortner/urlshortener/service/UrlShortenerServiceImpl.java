@@ -51,7 +51,11 @@ public class UrlShortenerServiceImpl implements UrlShortenerService {
         if (foundedUrl.isPresent()) {
             return foundedUrl.get();
         }
-        Redirection redirection = repository.save(new Redirection(url, urlShortener.generateUniqueKey(url.toString())));
+        String newKey = urlShortener.generateUniqueKey(url.toString());
+        while (repository.findRedirectionByShortenedUrlKey(newKey).isPresent()) {
+            newKey = urlShortener.generateUniqueKey(url.toString());
+        }
+        Redirection redirection = repository.save(new Redirection(url, newKey));
         return new ShortenUrlResponse(getShortenedUrl(redirection.getShortenedUrlKey()));
     }
 
