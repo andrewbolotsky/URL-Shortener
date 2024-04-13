@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.urlshortner.urlshortener.logic.UrlShortenerImpl;
 import org.urlshortner.urlshortener.model.Redirection;
 import org.urlshortner.urlshortener.repository.RedirectionRepository;
 import org.urlshortner.urlshortener.route.model.ShortenUrlResponse;
@@ -13,12 +14,13 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class UrlShortenerServiceImpl implements UrlShortenerService {
     @Autowired
     RedirectionRepository repository;
+    @Autowired
+    UrlShortenerImpl urlShortener;
 
     private String getShortenedUrl(String shortenedUrlKey) {
         final String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
@@ -49,7 +51,7 @@ public class UrlShortenerServiceImpl implements UrlShortenerService {
         if (foundedUrl.isPresent()) {
             return foundedUrl.get();
         }
-        Redirection redirection = repository.save(new Redirection(url, uniqueKeyForUrl(url.toString())));
+        Redirection redirection = repository.save(new Redirection(url, urlShortener.generateUniqueKey(url.toString())));
         return new ShortenUrlResponse(getShortenedUrl(redirection.getShortenedUrlKey()));
     }
 
@@ -58,10 +60,5 @@ public class UrlShortenerServiceImpl implements UrlShortenerService {
         return repository.findRedirectionByShortenedUrlKey(key)
                 .map(Redirection::getUrl)
                 .map(URL::toString);
-    }
-
-
-    private String uniqueKeyForUrl(String ignored) {
-        return UUID.randomUUID().toString();
     }
 }
