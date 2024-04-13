@@ -19,6 +19,7 @@ public class UrlShortenerController {
     @Autowired
     UrlShortenerService service;
 
+
     @ResponseBody
     @GetMapping("/shorten_url")
     public ResponseEntity<Object> getShortenUrl(@RequestBody ShortenUrlRequest request) {
@@ -55,4 +56,5 @@ public class UrlShortenerController {
         }
         return new RedirectView(redirect.get());
     }
+
 }
