@@ -8,7 +8,7 @@ REST API service to generate shortened URLs.
 
 #### GET /shorten_url
 
-Gets a shortened URL from the database if it exists there. Otherwise, the server returns an error.
+Gets a shortened URL from the database if it exists there. 
 
 ##### Interaction Format:
 
